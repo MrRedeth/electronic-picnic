@@ -358,7 +358,7 @@ function Navbar() {
       boxShadow: scrolled ? "0 2px 20px rgba(0,0,0,0.1)" : "none",
     }}>
       <a href="#hero" style={{ textDecoration: "none", display: isMobile ? "none" : "flex", alignItems: "center" }}>
-        <img src="assets/logo.svg" alt="Electronic Picnic" style={{ height: 44 }} />
+        <img src="assets/logo.png" alt="Electronic Picnic" style={{ height: 44 }} />
       </a>
 
       <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
@@ -420,7 +420,7 @@ function Hero() {
           <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: 72, color: COLORS.green, textShadow: "0 2px 12px rgba(255,255,255,0.6)", marginBottom: 16, lineHeight: 1.1 }}>
             {t.title[lang]}
           </h1>
-          <p style={{ fontSize: 22, color: "white", textShadow: "0 2px 10px rgba(0,0,0,0.3)", marginBottom: 16, fontWeight: 600, lineHeight: 1.4 }}>
+          <p style={{ fontSize: 22, color: COLORS.green, textShadow: "0 1px 8px rgba(255,255,255,0.7)", marginBottom: 16, fontWeight: 600, lineHeight: 1.4 }}>
             {t.subtitle[lang]}
           </p>
           <div style={{
@@ -453,7 +453,7 @@ function Hero() {
     <section id="hero" style={mobileStyle}>
       <div style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 24px", maxWidth: 700 }}>
         <h1 style={{ margin: "0 0 14px" }}>
-          <img src="assets/logo.svg" alt="Electronic Picnic" style={{ height: 128, display: "block", margin: "0 auto" }} />
+          <img src="assets/logo.png" alt="Electronic Picnic" style={{ height: 128, display: "block", margin: "0 auto" }} />
         </h1>
         <p style={{ fontSize: 17, color: COLORS.textLight, marginBottom: 14, fontWeight: 600, lineHeight: 1.4 }}>
           {t.subtitle[lang]}
@@ -1698,7 +1698,7 @@ function Footer() {
       }}>
         {/* Logo */}
         <div style={{ flex: 1 }}>
-          <img src="assets/logo.svg" alt="Electronic Picnic" style={{ height: 56, marginBottom: 12 }} />
+          <img src="assets/logo.png" alt="Electronic Picnic" style={{ height: 56, marginBottom: 12 }} />
           <p style={{ color: "rgba(51,51,51,0.5)", fontSize: 14 }}>
             1 Maggio 2026 — Carso, Trieste
           </p>
