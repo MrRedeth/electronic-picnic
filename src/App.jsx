@@ -413,10 +413,6 @@ function Hero() {
           position: "absolute", top: 0, left: 0,
           width: "100%", height: "100%", objectFit: "cover", zIndex: 0,
         }} />
-        <div style={{
-          position: "absolute", top: 0, left: 0, right: 0, height: "50%",
-          background: "linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 100%)", zIndex: 1,
-        }} />
         <div style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 24px", maxWidth: 700 }}>
           <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: 72, color: "white", textShadow: "0 3px 20px rgba(0,0,0,0.35)", marginBottom: 16, lineHeight: 1.1 }}>
             {t.title[lang]}
@@ -1506,8 +1502,8 @@ function FormSection() {
                     <button type="button" onClick={() => { setHasCompanions(true); setCompanions([{ name: "", pkg: "", workshop: "", allergies: "" }]); }}
                       style={{
                         flex: 1, padding: "16px", borderRadius: 16,
-                        border: `2px solid ${COLORS.green}`, background: "rgba(54,138,27,0.06)",
-                        fontFamily: "'Fredoka One', cursive", fontSize: 16, color: COLORS.green,
+                        border: "2px solid rgba(0,0,0,0.1)", background: "white",
+                        fontFamily: "'Fredoka One', cursive", fontSize: 16, color: COLORS.textLight,
                         cursor: "pointer",
                       }}>{t.companionsYes[lang]}</button>
                     <button type="button" onClick={() => { setHasCompanions(false); setCompanions([]); }}
@@ -1519,7 +1515,17 @@ function FormSection() {
                       }}>{t.companionsNo[lang]}</button>
                   </div>
                 )}
-                {hasCompanions === false && <NavButtons />}
+                {hasCompanions === false && (
+                  <div>
+                    <div style={{ textAlign: "center", marginBottom: 8 }}>
+                      <button type="button" onClick={() => setHasCompanions(null)}
+                        style={{ background: "none", border: "none", color: COLORS.teal, fontSize: 13, cursor: "pointer" }}>
+                        {lang === "it" ? "← Cambia scelta" : "← Change choice"}
+                      </button>
+                    </div>
+                    <NavButtons />
+                  </div>
+                )}
                 {hasCompanions === true && (
                   <div style={{ textAlign: "left" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, justifyContent: "center" }}>
