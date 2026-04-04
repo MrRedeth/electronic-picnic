@@ -73,19 +73,22 @@ export async function salvaPrenotazione({
     return { success: true, offline: true };
   }
 
-  // 1. Inserisci la prenotazione principale
-  const { data: pren, error: errPren } = await supabase
+  // 1. Inserisci la prenotazione principale (UUID generato lato client)
+  const bookingId = crypto.randomUUID();
+
+  const { error: errPren } = await supabase
     .from("prenotazioni")
     .insert({
+      id: bookingId,
       nome, email, telefono, pacchetto, workshop_scelto,
       allergie: allergie || null,
       note: note || null,
       totale_stimato,
-    })
-    .select("id")
-    .single();
+    });
 
   if (errPren) return { success: false, error: errPren };
+
+  const pren = { id: bookingId };
 
   // 2. Inserisci gli accompagnatori
   if (accompagnatori.length > 0) {

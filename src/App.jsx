@@ -135,10 +135,10 @@ const texts = {
     subtitle: { it: "Scegli la tua esperienza e registrati in pochi passi.", en: "Choose your experience and sign up in a few steps." },
     step1Title: { it: "Cosa ti interessa?", en: "What are you interested in?" },
     packages: [
-      { id: "free", name: { it: "Ingresso libero", en: "Free entry" }, price: { it: "Gratuito", en: "Free" }, desc: { it: "Dalle 13:30 — mercatini, musica e menu Avalon", en: "From 13:30 — markets, music, and Avalon menu" }, emoji: "🎶" },
       { id: "picnic", name: { it: "Picnic", en: "Picnic" }, price: "25€", desc: { it: "Area riservata 11:00–13:30, picnic box incluso", en: "Reserved area 11:00–13:30, picnic box included" }, emoji: "🧺" },
-      { id: "workshop", name: { it: "Workshop", en: "Workshop" }, price: "10€", desc: { it: "Una sessione a scelta tra ceramica, crochet e wine", en: "One session: ceramics, crochet, or wine" }, emoji: "🎨" },
       { id: "picnic_workshop", name: { it: "Picnic + Workshop", en: "Picnic + Workshop" }, price: "30€", desc: { it: "Formula combinata — il meglio della giornata", en: "Combined package — the best of the day" }, emoji: "✨" },
+      { id: "workshop", name: { it: "Workshop", en: "Workshop" }, price: "10€", desc: { it: "Una sessione a scelta tra ceramica, crochet e wine", en: "One session: ceramics, crochet, or wine" }, emoji: "🎨" },
+      { id: "free", name: { it: "Ingresso libero", en: "Free entry" }, price: { it: "Gratuito", en: "Free" }, desc: { it: "Dalle 13:30 — mercatini, musica e menu Avalon", en: "From 13:30 — markets, music, and Avalon menu" }, emoji: "🎶" },
     ],
     workshops: [
       { id: "ceramica", name: { it: "Ceramica libera", en: "Free ceramics" }, by: "Little Battle" },
