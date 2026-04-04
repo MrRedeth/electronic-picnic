@@ -404,6 +404,9 @@ function Hero() {
     justifyContent: "flex-start", alignItems: "center",
     paddingTop: "12vh",
     overflow: "hidden",
+    margin: "0 24px",
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   };
 
   if (!isMobile) {
@@ -414,7 +417,7 @@ function Hero() {
           width: "100%", height: "100%", objectFit: "cover", zIndex: 0,
         }} />
         <div style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 24px", maxWidth: 700 }}>
-          <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: 72, color: "white", textShadow: "0 3px 20px rgba(0,0,0,0.35)", marginBottom: 16, lineHeight: 1.1 }}>
+          <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: 72, color: COLORS.green, textShadow: "0 2px 12px rgba(255,255,255,0.6)", marginBottom: 16, lineHeight: 1.1 }}>
             {t.title[lang]}
           </h1>
           <p style={{ fontSize: 22, color: "white", textShadow: "0 2px 10px rgba(0,0,0,0.3)", marginBottom: 16, fontWeight: 600, lineHeight: 1.4 }}>
