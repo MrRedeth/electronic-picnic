@@ -10,6 +10,15 @@
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/assets/desktop/hero.webp" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧺</text></svg>" />
+    <!-- Preconnect: Google Fonts, Analytics, Supabase -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://kcktiiyfydedilnkgocv.supabase.co" />
+    <!-- Google Fonts: caricati staticamente per evitare FOIT -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+    <!-- Preload hero mobile (LCP critico su smartphone) -->
+    <link rel="preload" as="image" href="/assets/mobile/hero.webp" media="(max-width: 768px)" />
     <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-7LL13W3HVT"></script>
     <script>

@@ -27,14 +27,14 @@ const texts = {
   concetto: {
     title: { it: "Un'esperienza che evolve", en: "An experience that evolves" },
     text: {
-      it: "C'è un posto sul Carso triestino dove, ogni anno il Primo Maggio, il tempo rallenta.\nElectronic Pic Nic è un evento collettivo e itinerante nello spirito: un grande pic nic condiviso all'aperto, con musica elettronica live, workshop creativi, mercatini di artigianato selezionato e un'atmosfera che mescola natura, cultura e comunità.\n\nUn'esperienza ormai consolidata che ogni edizione porta con sé nuovi artisti, nuovi artigiani e nuove persone — ma sempre lo stesso filo: stare insieme, fuori, bene.\n\nOrganizzato da ON CIRCLE presso l'Avalon Wellness Spa immersa nel verde del Carso, Electronic Pic Nic è il festival di primavera che Trieste aspetta.",
-      en: "There's a place on the Karst plateau near Trieste where, every year on May Day, time slows down.\nElectronic Pic Nic is a collective, free-spirited event: a big shared outdoor picnic with live electronic music, creative workshops, curated artisan markets, and an atmosphere that blends nature, culture, and community.\n\nA well-established experience that each edition brings new artists, new artisans, and new people — but always the same thread: being together, outdoors, feeling good.\n\nOrganized by ON CIRCLE at Avalon Wellness Spa, nestled in the green Karst hills, Electronic Pic Nic is the spring festival Trieste looks forward to."
+      it: "Electronic Pic Nic è un evento collettivo dove il tempo rallenta e itinerante nello spirito: un grande pic nic condiviso all'aperto, con musica elettronica live, workshop creativi, mercatini artigianali e un'atmosfera che mescola natura, cultura e comunità.\n\nUn'esperienza che porta con sé artisti, artigiani e nuove persone. Un esperienza per stare insieme, fuori e bene.\n\nOrganizzato da ON CIRCLE presso l'Avalon Wellness Spa immersa nel verde del Carso, Electronic Pic Nic è l'evento di primavera che Trieste aspetta.",
+      en: "Electronic Pic Nic is a collective, free-spirited event: a big shared outdoor picnic with live electronic music, creative workshops, curated artisan markets, and an atmosphere that blends nature, culture, and community.\n\nAn experience that brings artists, artisans, and new people. An experience to being together, outdoors, and feeling good.\n\nOrganized by ON CIRCLE at Avalon Wellness Spa, nestled in the green Karst hills, Electronic Pic Nic is the event Trieste looks forward to."
     },
   },
   programma: {
     title: { it: "Programma della giornata", en: "Daily schedule" },
     items: [
-      { time: "11:00", it: "Corsa con Cavana Run Club", en: "Run with Cavana Run Club" },
+      { time: "11:00", it: "Attività Sportive", en: "Sport Activities" },
       { time: "12:00", it: "Apertura ufficiale + inizio musica", en: "Official opening + music starts" },
       { time: "11:00 – 13:30", it: "Area picnic riservata (prenotati)", en: "Reserved picnic area (booked)" },
       { time: "12:00 – 15:00", it: "Workshop (3 sessioni a rotazione)", en: "Workshops (3 rotating sessions)" },
@@ -45,8 +45,8 @@ const texts = {
   mercatini: {
     title: { it: "Mercatini artigianali", en: "Artisan markets" },
     text: {
-      it: "L'area mercatini è uno dei cuori pulsanti di Electronic Pic Nic. Ogni anno, circa 30 tra artigiani, artisti e brand selezionati portano il meglio della loro produzione in uno spazio curato, conviviale e completamente immerso nella natura.\n\nNon un semplice mercato — una piccola comunità creativa temporanea, dove ogni banchetto racconta una storia e ogni oggetto è fatto con intenzione.",
-      en: "The market area is one of the beating hearts of Electronic Pic Nic. Every year, around 30 selected artisans, artists, and brands bring the best of their work to a curated, convivial space fully immersed in nature.\n\nNot just a market — a small temporary creative community, where every stall tells a story and every object is made with intention."
+      it: "L'area mercatini è uno dei cuori pulsanti di Electronic Pic Nic. Artigiani, artisti e brand selezionati portano il meglio della loro produzione in uno spazio curato, conviviale e completamente immerso nella natura.\n\nNon un semplice mercato — una piccola comunità creativa temporanea, dove ogni banchetto racconta una storia e ogni oggetto è fatto con intenzione.",
+      en: "The market area is one of the beating hearts of Electronic Pic Nic. Artisans, artists, and brands bring the best of their work to a curated, convivial space fully immersed in nature.\n\nNot just a market — a small temporary creative community, where every stall tells a story and every object is made with intention."
     },
     vendors: [
       { name: "Relisa", cat: { it: "Cartomante", en: "Cartomancer" }, desc: { it: "Lasciati guidare dalle carte. Relisa porta con sé l'arte della cartomanzia e una lettura del futuro capace di stupire.", en: "Let yourself be guided by the cards. Relisa brings the art of cartomancy and a reading of the future capable of amazing you." } },
@@ -61,11 +61,12 @@ const texts = {
       { name: "Profumeria Essenze Trieste", cat: { it: "Profumeria", en: "Perfumery" }, desc: { it: "Una profumeria di nicchia nel cuore di Trieste, con una selezione di fragranze ricercate e di lusso per chi cerca qualcosa fuori dall'ordinario.", en: "A niche perfumery in the heart of Trieste, with a selection of refined and luxurious fragrances for those seeking something out of the ordinary." }, instagram: "https://www.instagram.com/profumeria_essenze_trieste?igsh=MWNpbjZ5OGprbmRydg==" },
       { name: "Alessia Canta Storie", cat: { it: "Wine Experience", en: "Wine Experience" }, desc: { it: "Alessia trasforma la degustazione del vino in un racconto: un'esperienza sensoriale e narrativa che ti porta a scoprire ogni calice come fosse una storia da ascoltare.", en: "Alessia transforms wine tasting into a story: a sensory and narrative experience that leads you to discover each glass as if it were a story to listen to." }, instagram: "https://www.instagram.com/michiamanocantastorie?igsh=MXdpMmdlc3RkZW1ibA==" },
       { name: "RoadRunners", cat: { it: "Esplorazioni organizzate", en: "Organised explorations" }, desc: { it: "Una community che trasforma ogni giornata in un'avventura: escursioni, attività outdoor e momenti di gruppo per scoprire il territorio, conoscere persone e creare connessioni reali.", en: "A community that turns every day into an adventure: hikes, outdoor activities and group moments to explore the area, meet people and build real connections." }, instagram: "https://www.instagram.com/roadrunners_esplorazioni" },
+      { name: "Goran Viler Hair Spa", cat: { it: "Hairstyle", en: "Hairstyle" }, desc: { it: "Goran Viler propone pieghe express, trecce personalizzate e consulenze professionali per cute e capelli.", en: "Goran Viler offers express blow-dries, personalised braids and professional scalp and hair consultations." } },
     ],
   },
   workshop: {
     title: { it: "Workshop creativi", en: "Creative workshops" },
-    subtitle: { it: "3 sessioni a rotazione: 12–13 / 13–14 / 14–15 — 10€ a sessione", en: "3 rotating sessions: 12–13 / 13–14 / 14–15 — €10 per session" },
+    subtitle: { it: "3 sessioni a rotazione: 12–13 / 13–14 / 14–15 — 15€ a sessione", en: "3 rotating sessions: 12–13 / 13–14 / 14–15 — €15 per session" },
     cards: [
       {
         title: { it: "Ceramica libera", en: "Free ceramics" },
@@ -123,8 +124,8 @@ const texts = {
   musica: {
     title: { it: "I DJ che ci accompagneranno durante la giornata.", en: "The DJs joining us throughout the day." },
     desc: {
-      it: "La musica elettronica è l'anima di Electronic Pic Nic. Dal mezzogiorno fino a fine giornata, il suono accompagna ogni momento — dal primo boccone del picnic all'ultima visita ai mercatini. Un sound curato, coerente con l'atmosfera outdoor e con l'energia del Carso.",
-      en: "Electronic music is the soul of Electronic Pic Nic. From noon until the end of the day, the sound accompanies every moment — from the first bite of the picnic to the last visit to the markets. A curated sound, in harmony with the outdoor atmosphere and the energy of the Karst."
+      it: "La musica elettronica è l'anima di Electronic Pic Nic. Dal mezzogiorno fino a fine giornata, il suono accompagna ogni momento — dal primo boccone fino a notte fonda. Un sound curato, coerente con l'atmosfera outdoor e con l'energia del Carso.",
+      en: "Electronic music is the soul of Electronic Pic Nic. From noon until the end of the day, the sound accompanies every moment — from the first bite until late at night. A curated sound, in harmony with the outdoor atmosphere and the energy of the Karst."
     },
     comingSoon: { it: "Lineup completa in arrivo...", en: "Full lineup coming soon..." },
     specialGuest: { it: "Special Guest Internazionale", en: "International Special Guest" },
@@ -136,8 +137,8 @@ const texts = {
     step1Title: { it: "Cosa ti interessa?", en: "What are you interested in?" },
     packages: [
       { id: "picnic", name: { it: "Picnic", en: "Picnic" }, price: "25€", desc: { it: "Area riservata 11:00–13:30, picnic box incluso", en: "Reserved area 11:00–13:30, picnic box included" }, emoji: "🧺" },
-      { id: "picnic_workshop", name: { it: "Picnic + Workshop", en: "Picnic + Workshop" }, price: "30€", desc: { it: "Formula combinata — il meglio della giornata", en: "Combined package — the best of the day" }, emoji: "✨" },
-      { id: "workshop", name: { it: "Workshop", en: "Workshop" }, price: "10€", desc: { it: "Una sessione a scelta tra ceramica, crochet e wine", en: "One session: ceramics, crochet, or wine" }, emoji: "🎨" },
+      { id: "picnic_workshop", name: { it: "Picnic + Workshop", en: "Picnic + Workshop" }, price: "35€", desc: { it: "Formula combinata — il meglio della giornata", en: "Combined package — the best of the day" }, emoji: "✨" },
+      { id: "workshop", name: { it: "Workshop", en: "Workshop" }, price: "15€", desc: { it: "Una sessione a scelta tra ceramica, crochet e wine", en: "One session: ceramics, crochet, or wine" }, emoji: "🎨" },
       { id: "free", name: { it: "Ingresso libero", en: "Free entry" }, price: { it: "Gratuito", en: "Free" }, desc: { it: "Dalle 13:30 — mercatini, musica e menu Avalon", en: "From 13:30 — markets, music, and Avalon menu" }, emoji: "🎶" },
     ],
     workshops: [
@@ -188,7 +189,7 @@ const texts = {
 };
 
 /* ─── Fonts & Colors ─── */
-const fontLink = "https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap";
+// Fonts caricati staticamente in index.html per evitare FOIT
 
 const COLORS = {
   cyan: "#87CEEB",
@@ -358,7 +359,7 @@ function Navbar() {
       boxShadow: scrolled ? "0 2px 20px rgba(0,0,0,0.1)" : "none",
     }}>
       <a href="#hero" style={{ textDecoration: "none", display: isMobile ? "none" : "flex", alignItems: "center" }}>
-        <img src="assets/logo.png" alt="Electronic Picnic" style={{ height: 44 }} />
+        <img src="assets/logo.webp" alt="Electronic Picnic" style={{ height: 44 }} />
       </a>
 
       <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
@@ -453,7 +454,7 @@ function Hero() {
     <section id="hero" style={mobileStyle}>
       <div style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "0 24px", maxWidth: 700 }}>
         <h1 style={{ margin: "0 0 14px" }}>
-          <img src="assets/logo.png" alt="Electronic Picnic" style={{ height: 128, display: "block", margin: "0 auto" }} />
+          <img src="assets/logo.webp" alt="Electronic Picnic" style={{ height: 128, display: "block", margin: "0 auto" }} />
         </h1>
         <p style={{ fontSize: 17, color: COLORS.textLight, marginBottom: 14, fontWeight: 600, lineHeight: 1.4 }}>
           {t.subtitle[lang]}
@@ -727,7 +728,7 @@ function Workshop() {
           {card.desc[lang]}
         </p>
         <div style={{ marginTop: 16, fontFamily: "'Fredoka One', cursive", fontSize: 20, color: COLORS.orange }}>
-          10€
+          15€
         </div>
       </div>
     );
@@ -820,7 +821,7 @@ function ComeArrivare() {
             transform: inView ? "translateY(0)" : "translateY(20px)",
             transition: "all 0.6s ease",
           }}>
-            <img src="assets/bus.webp" alt="Bus navetta" className="float-slow"
+            <img src="assets/bus.webp" alt="Bus navetta" className="float-slow" loading="lazy"
               style={{ width: 140, height: 140, objectFit: "contain", margin: "0 auto 20px", display: "block" }} />
             <h3 style={{ fontFamily: "'Fredoka One', cursive", fontSize: 22, color: COLORS.nightBlue, marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
               <Bus size={20} color={COLORS.teal} />
@@ -861,7 +862,7 @@ function ComeArrivare() {
             </div>
             {/* Nota */}
             <p style={{ marginTop: 20, fontSize: 12, color: "rgba(51,51,51,0.45)", fontStyle: "italic" }}>
-              Servizio offerto a cura di Road Runners, maggiori info nella serzione Mercatini
+              Servizio offerto a cura di Road Runners, maggiori info nella sezione Mercatini
             </p>
           </div>
 
@@ -875,7 +876,7 @@ function ComeArrivare() {
             transform: inView ? "translateY(0)" : "translateY(20px)",
             transition: "all 0.6s ease 0.15s",
           }}>
-            <img src="assets/car.webp" alt="In auto" className="float-slow"
+            <img src="assets/car.webp" alt="In auto" className="float-slow" loading="lazy"
               style={{ width: 160, height: 160, objectFit: "contain", margin: "0 auto 20px", display: "block" }} />
             <h3 style={{ fontFamily: "'Fredoka One', cursive", fontSize: 22, color: COLORS.nightBlue, marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
               <Car size={20} color={COLORS.teal} />
@@ -986,7 +987,7 @@ function DJCard({ dj, i, inView }) {
         boxShadow: "0 4px 16px rgba(42,171,179,0.2)",
         background: "rgba(42,171,179,0.06)",
       }}>
-        <img src={`assets/dj/${dj.photo}`} alt={dj.name}
+        <img src={`assets/dj/${dj.photo}`} alt={dj.name} loading="lazy"
           style={{ width: "100%", height: "100%", objectFit: "cover" }} />
       </div>
       <h4 style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.nightBlue, fontSize: 17, margin: 0, lineHeight: 1.2 }}>
@@ -1011,7 +1012,7 @@ function SpecialGuestCard({ lang, inView, t }) {
         border: `3px solid ${COLORS.orange}`,
         boxShadow: "0 4px 20px rgba(242,140,40,0.3)",
       }}>
-        <img src="assets/special_guest.webp" alt="Special Guest"
+        <img src="assets/special_guest.webp" alt="Special Guest" loading="lazy"
           style={{ width: "100%", height: "100%", objectFit: "cover" }} />
       </div>
       <h4 style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.orange, fontSize: 18, marginBottom: 4, lineHeight: 1.3, textAlign: "center" }}>
@@ -1134,7 +1135,7 @@ function Musica() {
    ═══════════════════════════════════════════ */
 /* ─── Helper: price value from package id ─── */
 function pkgPrice(id) {
-  const map = { free: 0, picnic: 25, workshop: 10, picnic_workshop: 30 };
+  const map = { free: 0, picnic: 25, workshop: 15, picnic_workshop: 35 };
   return map[id] || 0;
 }
 function needsWorkshop(id) { return id === "workshop" || id === "picnic_workshop"; }
@@ -1698,7 +1699,7 @@ function Footer() {
       }}>
         {/* Logo */}
         <div style={{ flex: 1 }}>
-          <img src="assets/logo.png" alt="Electronic Picnic" style={{ height: 56, marginBottom: 12 }} />
+          <img src="assets/logo.webp" alt="Electronic Picnic" style={{ height: 56, marginBottom: 12 }} />
           <p style={{ color: "rgba(51,51,51,0.5)", fontSize: 14 }}>
             1 Maggio 2026 — Carso, Trieste
           </p>
@@ -1741,7 +1742,6 @@ export default function ElectronicPicnic() {
 
   return (
     <LangContext.Provider value={{ lang, setLang }}>
-      <link href={fontLink} rel="stylesheet" />
       <style>{globalStyles}</style>
       <div style={{ minHeight: "100vh" }}>
         <Navbar />
