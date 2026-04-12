@@ -916,6 +916,7 @@ function renderModal(pkg) {
           <td class="note-cell" title="${escHtml(allergie)}">${escHtml(allergie)}</td>
           <td class="note-cell" style="color:#aaa">—</td>
           <td style="font-size:11px;color:#6b7280;white-space:nowrap">${date}</td>
+          <td style="color:#aaa">—</td>
           ${paidCell}
         </tr>`;
     } else {
@@ -923,6 +924,7 @@ function renderModal(pkg) {
       const tel = r.telefono || '—';
       const note = r.note || '—';
       const companionsInPkg = (r.partecipanti || []).filter(p => (p.pacchetto || r.pacchetto) === pkg).length;
+      const totale = r.totale_stimato != null ? `<strong style="color:var(--green)">${r.totale_stimato}€</strong>` : '<span style="color:#aaa">—</span>';
       const paidCell = isPaid ? `
         <td>
           <div style="display:flex;align-items:center;gap:4px">
@@ -947,6 +949,7 @@ function renderModal(pkg) {
           <td class="note-cell" title="${escHtml(allergie)}">${escHtml(allergie)}</td>
           <td class="note-cell" title="${escHtml(note)}">${escHtml(note)}</td>
           <td style="font-size:11px;color:#6b7280;white-space:nowrap">${date}</td>
+          <td style="white-space:nowrap">${totale}</td>
           ${paidCell}
         </tr>`;
     }
@@ -962,6 +965,7 @@ function renderModal(pkg) {
           <th>Allergie</th>
           <th>Note</th>
           <th>Iscrizione</th>
+          <th>Totale</th>
           ${paidCol}
         </tr>
       </thead>
