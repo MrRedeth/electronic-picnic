@@ -52,7 +52,7 @@ const texts = {
       { name: "Relisa", cat: { it: "Cartomante", en: "Cartomancer" }, desc: { it: "Lasciati guidare dalle carte. Relisa porta con sé l'arte della cartomanzia e una lettura del futuro capace di stupire.", en: "Let yourself be guided by the cards. Relisa brings the art of cartomancy and a reading of the future capable of amazing you." } },
       { name: "Chicca Mutti", cat: { it: "Borsette Crochet", en: "Crochet Bags" }, desc: { it: "Creazioni handmade all'uncinetto nate a Trieste, dove la semplicità diventa eleganza. Ogni borsa è un pezzo unico fatto con le mani, con cura e intenzione.", en: "Handmade crochet creations born in Trieste, where simplicity becomes elegance. Each bag is a unique piece made by hand, with care and intention." }, instagram: "https://www.instagram.com/chicca.mutti/" },
       { name: "Aperitas Art", cat: { it: "Artista", en: "Artist" }, desc: { it: "Opere d'arte originali con un'estetica contemporanea e personale. Un linguaggio visivo che racconta storie attraverso colori e forme.", en: "Original artworks with a contemporary and personal aesthetic. A visual language that tells stories through colors and shapes." }, instagram: "https://www.instagram.com/asperitas.art?igsh=MXMyaTg5M2xlZDg3ZQ==" },
-      { name: "Little Battle", cat: { it: "Pittura su Ceramica", en: "Ceramic Painting" }, desc: { it: "Un laboratorio dove chiunque può dipingere su ceramica, esprimendo il proprio lato creativo in un ambiente accogliente e rilassante. Creato da te, per te.", en: "A workshop where anyone can paint on ceramics, expressing their creative side in a welcoming and relaxing environment. Made by you, for you." }, sito: "https://www.hotellots.space/2022/12/22/little-beetle/" },
+      { name: "Little Beetle", cat: { it: "Pittura su Ceramica", en: "Ceramic Painting" }, desc: { it: "Un laboratorio divertente e creativo: dipingi sulla ceramica! Portiamo una selezione di ceramiche bianche tra cui scegliere, che potrai dipingere e portare a casa come ricordo. Avrai la possibilità di creare la tua opera d'arte su un pezzo di ceramica. Perfetto per tutte le età.", en: "A fun and creative workshop — paint on ceramics! We bring a selection of white ceramics to choose from, which you can paint and take home as a memento. You'll have the chance to create your own artwork on a piece of ceramic. Perfect for all ages." }, sito: "https://www.hotellots.space/2022/12/22/little-beetle/" },
       { name: "Bronzinska", cat: { it: "Upcycling", en: "Upcycling" }, desc: { it: "Vestiti e accessori che nascono da una seconda vita — moda consapevole e unica, perché ogni capo ha una storia da raccontare.", en: "Clothes and accessories born from a second life — conscious and unique fashion, because every garment has a story to tell." }, instagram: "https://www.instagram.com/bronzinska_handmade?igsh=MWZjZTUyNHpvbmIzcg==" },
       { name: "Enneart", cat: { it: "Disegni digitali su stoffe", en: "Digital prints on fabric" }, desc: { it: "Irene Antonini trasforma disegni digitali in accessori unici stampati su stoffe, dal suo laboratorio aperto nel cuore di Trieste.", en: "Irene Antonini transforms digital drawings into unique accessories printed on fabrics, from her studio in the heart of Trieste." }, instagram: "https://www.instagram.com/enne.art/" },
       { name: "Raffaella De Santis", cat: { it: "Bijoux", en: "Jewellery" }, desc: { it: "Gioielli artigianali pensati per chi ama portare con sé un pezzo d'arte — pezzi unici con carattere e cura nei dettagli.", en: "Handcrafted jewelry for those who love to carry a piece of art — unique pieces with character and attention to detail." } },
@@ -69,9 +69,9 @@ const texts = {
     subtitle: { it: "3 sessioni a rotazione: 12–13 / 13–14 / 14–15 — 15€ a sessione", en: "3 rotating sessions: 12–13 / 13–14 / 14–15 — €15 per session" },
     cards: [
       {
-        title: { it: "Ceramica libera", en: "Free ceramics" },
-        by: "Little Battle",
-        desc: { it: "Decorazione e personalizzazione di ceramiche. Esprimi la tua creatività plasmando e dipingendo pezzi unici.", en: "Ceramic decoration and customization. Express your creativity by shaping and painting unique pieces." },
+        title: { it: "Little Beetle", en: "Little Beetle" },
+        by: "Little Beetle",
+        desc: { it: "Un laboratorio divertente e creativo: dipingi sulla ceramica! Portiamo una selezione di ceramiche bianche tra cui scegliere, che potrai dipingere e portare a casa come ricordo. Avrai la possibilità di creare la tua opera d'arte su un pezzo di ceramica. Perfetto per tutte le età.", en: "A fun and creative workshop — paint on ceramics! We bring a selection of white ceramics to choose from, which you can paint and take home as a memento. You'll have the chance to create your own artwork on a piece of ceramic. Perfect for all ages." },
         icon: "palette",
       },
       {
@@ -142,7 +142,7 @@ const texts = {
       { id: "free", name: { it: "Ingresso libero", en: "Free entry" }, price: { it: "Gratuito", en: "Free" }, desc: { it: "Dalle 13:30 — mercatini, musica e menu Avalon", en: "From 13:30 — markets, music, and Avalon menu" }, emoji: "🎶" },
     ],
     workshops: [
-      { id: "ceramica", name: { it: "Ceramica libera", en: "Free ceramics" }, by: "Little Battle" },
+      { id: "ceramica", name: { it: "Little Beetle", en: "Little Beetle" }, by: "Little Beetle" },
       { id: "crochet", name: { it: "Borsa Crochet", en: "Crochet bag" }, by: "Chicca Mutti" },
       { id: "wine", name: { it: "Wine Experience", en: "Wine Experience" }, by: { it: "Sommelier", en: "Sommelier" } },
     ],
@@ -864,6 +864,26 @@ function ComeArrivare() {
             <p style={{ marginTop: 20, fontSize: 12, color: "rgba(51,51,51,0.45)", fontStyle: "italic" }}>
               Servizio offerto a cura di Road Runners, maggiori info nella sezione Mercatini
             </p>
+            {/* Prenota bus */}
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSc7TT4ejtt8XCdJeaZJCvrgHYqKVTPHT9d2vdhKQAGaCe87Jw/viewform"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-block",
+                marginTop: 16,
+                background: `linear-gradient(135deg, ${COLORS.teal}, ${COLORS.green})`,
+                color: "white",
+                fontFamily: "'Fredoka One', cursive",
+                fontSize: 15,
+                padding: "10px 24px",
+                borderRadius: 50,
+                textDecoration: "none",
+                boxShadow: "0 4px 12px rgba(42,171,179,0.3)",
+              }}
+            >
+              🚌 {lang === "it" ? "Prenota il tuo posto — 5€ a/r" : "Book your seat — €5 return"}
+            </a>
           </div>
 
           {/* Auto card */}

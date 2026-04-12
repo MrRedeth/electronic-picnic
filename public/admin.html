@@ -553,6 +553,12 @@
 
     .text-muted { color: var(--gray); font-style: italic; }
     .note-cell { max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Accompagnati */
+    .participants-table tr.accompagnato-row td { background: #f0f9ff; }
+    .participants-table tr.accompagnato-row:hover td { background: #e0f4fc; }
+    .participants-table tr.accompagnato-row.pagato td { background: #e8f5f0; }
+    .participants-table tr.accompagnato-row.pagato:hover td { background: #d8ede4; }
   </style>
 </head>
 <body>
@@ -749,35 +755,40 @@ async function loadData() {
 
 // ── RENDER DASHBOARD ──
 function renderDashboard() {
-  const counts = { picnic: 0, picnic_workshop: 0, workshop: 0, free: 0 };
-  const pagati = { picnic: 0, picnic_workshop: 0, workshop: 0, free: 0 };
+  const counts     = { picnic: 0, picnic_workshop: 0, workshop: 0, free: 0 };
+  const countsPren = { picnic: 0, picnic_workshop: 0, workshop: 0, free: 0 };
+  const pagati     = { picnic: 0, picnic_workshop: 0, workshop: 0, free: 0 };
   let totalPersone = 0;
 
   allData.forEach(r => {
     const pkg = r.pacchetto;
     if (counts[pkg] !== undefined) {
       counts[pkg]++;
+      countsPren[pkg]++;
       if (r.pagamento_effettuato) pagati[pkg]++;
     }
-    // Count total people: 1 (main) + companions
-    const companions = (r.partecipanti || []).length;
-    totalPersone += 1 + companions;
+    totalPersone++;
+    // Conta ogni partecipante nel proprio pacchetto
+    (r.partecipanti || []).forEach(p => {
+      const ppkg = p.pacchetto || pkg;
+      if (counts[ppkg] !== undefined) counts[ppkg]++;
+      totalPersone++;
+    });
   });
 
-  const totalIscrizioni = allData.length;
-  document.getElementById('stat-total').textContent = totalIscrizioni;
-  document.getElementById('stat-total-sub').textContent = `${totalPersone} persone totali`;
-  document.getElementById('chart-center-num').textContent = totalIscrizioni;
+  document.getElementById('stat-total').textContent = totalPersone;
+  document.getElementById('stat-total-sub').textContent = `di cui ${allData.length} prenotazioni`;
+  document.getElementById('chart-center-num').textContent = totalPersone;
 
   // Update stat cards
   Object.keys(PKG).forEach(pkg => {
     document.getElementById(`stat-${pkg}`).textContent = counts[pkg];
     const subEl = document.getElementById(`stat-${pkg}-pagati`);
     if (subEl && PKG[pkg].isPaid) {
-      subEl.textContent = counts[pkg] > 0
-        ? `${pagati[pkg]}/${counts[pkg]} pagamenti`
+      subEl.textContent = countsPren[pkg] > 0
+        ? `${pagati[pkg]}/${countsPren[pkg]} pagamenti`
         : '';
-      subEl.style.color = pagati[pkg] === counts[pkg] && counts[pkg] > 0 ? '#368a1b' : '#6b7280';
+      subEl.style.color = pagati[pkg] === countsPren[pkg] && countsPren[pkg] > 0 ? '#368a1b' : '#6b7280';
     }
   });
 
@@ -818,7 +829,7 @@ function renderDashboard() {
   const legendEl = document.getElementById('legend-list');
   legendEl.innerHTML = '';
   Object.entries(PKG).forEach(([pkg, cfg]) => {
-    const pct = totalIscrizioni > 0 ? Math.round((counts[pkg] / totalIscrizioni) * 100) : 0;
+    const pct = totalPersone > 0 ? Math.round((counts[pkg] / totalPersone) * 100) : 0;
     const pagatiStr = cfg.isPaid ? `<span class="legend-pagati">${pagati[pkg]} pagati</span>` : '';
     legendEl.innerHTML += `
       <div class="legend-item" onclick="openModal('${pkg}')">
@@ -855,56 +866,91 @@ function handleOverlayClick(e) {
 }
 
 function renderModal(pkg) {
-  const filtered = allData.filter(r => r.pacchetto === pkg);
+  // Lista piatta: prenotanti + accompagnati per questo pacchetto
+  const flatList = [];
+  allData.forEach(r => {
+    if (r.pacchetto === pkg) {
+      flatList.push({ type: 'prenotante', data: r, refName: null, refPagato: false });
+    }
+    (r.partecipanti || []).forEach(p => {
+      const ppkg = p.pacchetto || r.pacchetto;
+      if (ppkg === pkg) {
+        flatList.push({ type: 'accompagnato', data: p, refName: r.nome, refPagato: r.pagamento_effettuato });
+      }
+    });
+  });
+
   const cfg = PKG[pkg];
-  document.getElementById('modal-count').textContent = `${filtered.length} iscritti`;
+  document.getElementById('modal-count').textContent = `${flatList.length} partecipanti`;
 
   const body = document.getElementById('modal-body');
 
-  if (filtered.length === 0) {
+  if (flatList.length === 0) {
     body.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>Nessuna iscrizione per questo pacchetto</p></div>`;
     return;
   }
 
   const isPaid = cfg.isPaid;
+  const showWorkshop = (pkg === 'picnic_workshop' || pkg === 'workshop');
+  const workshopCol = showWorkshop ? '<th>Workshop</th>' : '';
   const paidCol = isPaid ? `<th>Pagamento</th>` : '';
 
-  let rows = filtered.map(r => {
-    const companions = (r.partecipanti || []).length;
-    const persone = 1 + companions;
-    const workshop = r.workshop_scelto || '—';
-    const allergie = r.allergie || '—';
-    const note = r.note || '—';
-    const tel = r.telefono || '—';
-    const date = new Date(r.created_at).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+  const rows = flatList.map(entry => {
+    const { type, data, refName, refPagato } = entry;
+    const isAccompagnato = type === 'accompagnato';
+    const date = new Date(data.created_at).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+    const workshop = data.workshop_scelto || '—';
+    const allergie = data.allergie || '—';
 
-    const paidCell = isPaid ? `
-      <td>
-        <div style="display:flex;align-items:center;gap:4px">
-          <input type="checkbox" class="checkbox-pagato"
-            ${r.pagamento_effettuato ? 'checked' : ''}
-            onchange="togglePagamento('${r.id}', this.checked, this)"
-            title="Segna come pagato" />
-          <span class="${r.pagamento_effettuato ? 'pagato-label' : 'non-pagato-label'}">
-            ${r.pagamento_effettuato ? 'Pagato' : 'In attesa'}
-          </span>
-        </div>
-      </td>` : '';
-
-    return `
-      <tr class="${r.pagamento_effettuato ? 'pagato' : ''}" id="row-${r.id}">
-        <td><strong>${escHtml(r.nome)}</strong><br><span style="font-size:11px;color:#6b7280">${escHtml(r.email)}</span></td>
-        <td>${escHtml(tel)}</td>
-        <td><span style="font-size:13px;font-weight:600">${persone}</span></td>
-        ${pkg === 'picnic_workshop' || pkg === 'workshop' ? `<td>${escHtml(workshop)}</td>` : ''}
-        <td class="note-cell" title="${escHtml(allergie)}">${escHtml(allergie)}</td>
-        <td class="note-cell" title="${escHtml(note)}">${escHtml(note)}</td>
-        <td style="font-size:11px;color:#6b7280;white-space:nowrap">${date}</td>
-        ${paidCell}
-      </tr>`;
+    if (isAccompagnato) {
+      const paidCell = isPaid ? `
+        <td><span style="font-size:11px;color:#6b7280;font-style:italic">incluso</span></td>` : '';
+      return `
+        <tr class="accompagnato-row${refPagato ? ' pagato' : ''}">
+          <td>
+            <strong>${escHtml(data.nome)}</strong>
+            <br><span style="font-size:11px;color:#2AABB3">👤 Accompagnato da ${escHtml(refName)}</span>
+          </td>
+          <td style="color:#aaa">—</td>
+          ${showWorkshop ? `<td>${escHtml(workshop)}</td>` : ''}
+          <td class="note-cell" title="${escHtml(allergie)}">${escHtml(allergie)}</td>
+          <td class="note-cell" style="color:#aaa">—</td>
+          <td style="font-size:11px;color:#6b7280;white-space:nowrap">${date}</td>
+          ${paidCell}
+        </tr>`;
+    } else {
+      const r = data;
+      const tel = r.telefono || '—';
+      const note = r.note || '—';
+      const companionsInPkg = (r.partecipanti || []).filter(p => (p.pacchetto || r.pacchetto) === pkg).length;
+      const paidCell = isPaid ? `
+        <td>
+          <div style="display:flex;align-items:center;gap:4px">
+            <input type="checkbox" class="checkbox-pagato"
+              ${r.pagamento_effettuato ? 'checked' : ''}
+              onchange="togglePagamento('${r.id}', this.checked, this)"
+              title="Segna come pagato" />
+            <span class="${r.pagamento_effettuato ? 'pagato-label' : 'non-pagato-label'}">
+              ${r.pagamento_effettuato ? 'Pagato' : 'In attesa'}
+            </span>
+          </div>
+        </td>` : '';
+      return `
+        <tr class="${r.pagamento_effettuato ? 'pagato' : ''}" id="row-${r.id}">
+          <td>
+            <strong>${escHtml(r.nome)}</strong>
+            <br><span style="font-size:11px;color:#6b7280">${escHtml(r.email)}</span>
+            ${companionsInPkg > 0 ? `<br><span style="font-size:10px;color:#2AABB3">+${companionsInPkg} accompagnato/i</span>` : ''}
+          </td>
+          <td>${escHtml(tel)}</td>
+          ${showWorkshop ? `<td>${escHtml(workshop)}</td>` : ''}
+          <td class="note-cell" title="${escHtml(allergie)}">${escHtml(allergie)}</td>
+          <td class="note-cell" title="${escHtml(note)}">${escHtml(note)}</td>
+          <td style="font-size:11px;color:#6b7280;white-space:nowrap">${date}</td>
+          ${paidCell}
+        </tr>`;
+    }
   }).join('');
-
-  const workshopCol = (pkg === 'picnic_workshop' || pkg === 'workshop') ? '<th>Workshop</th>' : '';
 
   body.innerHTML = `
     <table class="participants-table">
@@ -912,7 +958,6 @@ function renderModal(pkg) {
         <tr>
           <th>Nominativo</th>
           <th>Telefono</th>
-          <th>Persone</th>
           ${workshopCol}
           <th>Allergie</th>
           <th>Note</th>
@@ -965,22 +1010,40 @@ async function togglePagamento(id, checked, el) {
 // ── EXPORT CSV ──
 function exportCSV() {
   const pkg = currentPkg;
-  const filtered = pkg ? allData.filter(r => r.pacchetto === pkg) : allData;
   const pkgLabel = pkg ? PKG[pkg].label : 'Tutti';
+  const source = pkg ? allData.filter(r => r.pacchetto === pkg) : allData;
 
-  const header = ['Nome', 'Email', 'Telefono', 'Pacchetto', 'Workshop', 'N. Persone', 'Allergie', 'Note', 'Iscrizione', 'Pagamento'];
-  const rows = filtered.map(r => {
-    const persone = 1 + (r.partecipanti || []).length;
+  const header = ['Nome', 'Email', 'Telefono', 'Pacchetto', 'Workshop', 'Allergie', 'Note', 'Iscrizione', 'Pagamento', 'Tipo'];
+  const rows = [];
+
+  source.forEach(r => {
     const date = new Date(r.created_at).toLocaleDateString('it-IT');
-    return [
+    rows.push([
       r.nome, r.email, r.telefono || '',
       PKG[r.pacchetto]?.label || r.pacchetto,
       r.workshop_scelto || '',
-      persone,
       r.allergie || '', r.note || '',
       date,
-      PKG[r.pacchetto]?.isPaid ? (r.pagamento_effettuato ? 'Sì' : 'No') : 'N/A'
-    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+      PKG[r.pacchetto]?.isPaid ? (r.pagamento_effettuato ? 'Sì' : 'No') : 'N/A',
+      'Prenotante'
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+
+    // Aggiungi gli accompagnati
+    (r.partecipanti || []).forEach(p => {
+      const ppkg = p.pacchetto || r.pacchetto;
+      if (!pkg || ppkg === pkg) {
+        const pdate = new Date(p.created_at).toLocaleDateString('it-IT');
+        rows.push([
+          p.nome, '', '',
+          PKG[ppkg]?.label || ppkg,
+          p.workshop_scelto || '',
+          p.allergie || '', '',
+          pdate,
+          `Incluso (paga ${r.nome})`,
+          'Accompagnato'
+        ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+      }
+    });
   });
 
   const csv = [header.join(','), ...rows].join('\n');
