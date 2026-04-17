@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { MapPin, Clock, Music, Palette, Wine, ShoppingBag, Bus, Car, ChevronDown, Instagram, Mail, Phone, Users, Check, X, Globe } from "lucide-react";
 import { salvaPrenotazione } from "./supabase.js";
+import ConsentBanner from "./ConsentBanner.jsx";
+import { initConsent, openConsentPreferences, CONSENT_VERSION } from "./consent.js";
 
 /* ─── Language Context ─── */
 const LangContext = createContext();
@@ -150,8 +152,6 @@ const texts = {
     name: { it: "Nome e Cognome", en: "Full Name" },
     email: { it: "Email", en: "Email" },
     phone: { it: "Telefono", en: "Phone" },
-    allergies: { it: "Allergie o intolleranze", en: "Allergies or intolerances" },
-    allergiesPlaceholder: { it: "Es. glutine, lattosio... (opzionale)", en: "E.g. gluten, lactose... (optional)" },
     workshopLabel: { it: "Quale workshop?", en: "Which workshop?" },
     step3Title: { it: "Verrai con altre persone?", en: "Coming with others?" },
     companionsYes: { it: "Sì", en: "Yes" },
@@ -177,6 +177,22 @@ const texts = {
       package: { it: "Seleziona un'esperienza", en: "Please select an experience" },
       workshop: { it: "Seleziona un workshop", en: "Please select a workshop" },
       companionName: { it: "Inserisci nome e cognome", en: "Please enter full name" },
+      privacy: { it: "Per inviare la prenotazione devi accettare l'informativa privacy", en: "To submit you must accept the privacy notice" },
+    },
+    consent: {
+      privacy: {
+        it: "Ho letto l'",
+        en: "I have read the ",
+      },
+      privacyLink: { it: "informativa privacy", en: "privacy notice" },
+      privacyTail: {
+        it: " e acconsento al trattamento dei miei dati per la gestione della prenotazione.",
+        en: " and I consent to the processing of my data for the booking.",
+      },
+      marketing: {
+        it: "Desidero ricevere comunicazioni su futuri eventi di ON CIRCLE (facoltativo).",
+        en: "I'd like to receive communications about future ON CIRCLE events (optional).",
+      },
     },
   },
   footer: {
@@ -185,6 +201,11 @@ const texts = {
     partnerList: "ON CIRCLE Music, Avalon Wellness & Medical",
     contact: { it: "Contatti", en: "Contact" },
     contactSoon: { it: "In arrivo", en: "Coming soon" },
+    legal: {
+      privacy: { it: "Privacy Policy", en: "Privacy Policy" },
+      cookie: { it: "Cookie Policy", en: "Cookie Policy" },
+      preferences: { it: "Preferenze cookie", en: "Cookie preferences" },
+    },
   },
 };
 
@@ -1159,7 +1180,6 @@ function pkgPrice(id) {
   return map[id] || 0;
 }
 function needsWorkshop(id) { return id === "workshop" || id === "picnic_workshop"; }
-function needsAllergies(id) { return id === "picnic" || id === "picnic_workshop"; }
 
 function FormSection() {
   const { lang } = useLang();
@@ -1173,10 +1193,11 @@ function FormSection() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [allergies, setAllergies] = useState("");
   const [hasCompanions, setHasCompanions] = useState(null);
   const [companions, setCompanions] = useState([]);
   const [notes, setNotes] = useState("");
+  const [consentPrivacy, setConsentPrivacy] = useState(false);
+  const [consentMarketing, setConsentMarketing] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -1207,14 +1228,13 @@ function FormSection() {
     c[idx] = { ...c[idx], [field]: value };
     /* reset workshop if package changes to one that doesn't need it */
     if (field === "pkg" && !needsWorkshop(value)) c[idx].workshop = "";
-    if (field === "pkg" && !needsAllergies(value)) c[idx].allergies = "";
     setCompanions(c);
   };
 
   const setCompanionCount = (n) => {
     const arr = [];
     for (let i = 0; i < n; i++) {
-      arr.push(companions[i] || { name: "", pkg: "", workshop: "", allergies: "" });
+      arr.push(companions[i] || { name: "", pkg: "", workshop: "" });
     }
     setCompanions(arr);
   };
@@ -1265,19 +1285,28 @@ function FormSection() {
 
   /* Submit */
   const handleSubmit = async () => {
+    /* Validation: privacy consent obbligatorio */
+    if (!consentPrivacy) {
+      setErrors({ ...errors, privacy: t.errors.privacy[lang] });
+      return;
+    }
+    setErrors({});
     setSubmitting(true);
+    const consentTs = new Date().toISOString();
     try {
       const result = await salvaPrenotazione({
         nome: name, email, telefono: phone,
         pacchetto: selectedPkg,
         workshop_scelto: needsWorkshop(selectedPkg) ? workshopChoice : null,
-        allergie: needsAllergies(selectedPkg) ? allergies : null,
         note: notes || null,
         totale_stimato: totalPrice(),
+        consent_privacy_at: consentTs,
+        consent_privacy_version: CONSENT_VERSION,
+        consent_marketing_at: consentMarketing ? consentTs : null,
+        consent_marketing_version: consentMarketing ? CONSENT_VERSION : null,
         accompagnatori: companions.filter(c => c.name.trim()).map(c => ({
           nome: c.name, pacchetto: c.pkg || null,
           workshop: needsWorkshop(c.pkg) ? c.workshop : null,
-          allergie: needsAllergies(c.pkg) ? c.allergies : null,
         })),
       });
       if (!result.success) console.error("Errore salvataggio:", result.error);
@@ -1503,13 +1532,6 @@ function FormSection() {
                       {errors.workshop && <span style={errStyle}>{errors.workshop}</span>}
                     </div>
                   )}
-                  {needsAllergies(selectedPkg) && (
-                    <div>
-                      <label style={labelStyle}>{t.allergies[lang]}</label>
-                      <input type="text" value={allergies} onChange={e => setAllergies(e.target.value)}
-                        placeholder={t.allergiesPlaceholder[lang]} style={inputStyle} />
-                    </div>
-                  )}
                 </div>
                 <NavButtons />
               </div>
@@ -1523,7 +1545,7 @@ function FormSection() {
                 </h3>
                 {hasCompanions === null && (
                   <div style={{ display: "flex", gap: 12, justifyContent: "center", marginBottom: 20 }}>
-                    <button type="button" onClick={() => { setHasCompanions(true); setCompanions([{ name: "", pkg: "", workshop: "", allergies: "" }]); }}
+                    <button type="button" onClick={() => { setHasCompanions(true); setCompanions([{ name: "", pkg: "", workshop: "" }]); }}
                       style={{
                         flex: 1, padding: "16px", borderRadius: 16,
                         border: "2px solid rgba(0,0,0,0.1)", background: "white",
@@ -1593,11 +1615,6 @@ function FormSection() {
                               {errors[`comp_ws_${i}`] && <span style={errStyle}>{errors[`comp_ws_${i}`]}</span>}
                             </div>
                           )}
-                          {needsAllergies(c.pkg) && (
-                            <input type="text" value={c.allergies || ""} onChange={e => updateCompanion(i, "allergies", e.target.value)}
-                              placeholder={t.allergiesPlaceholder[lang]}
-                              style={{ ...inputStyle, padding: "10px 14px", fontSize: 14 }} />
-                          )}
                         </div>
                       </div>
                     ))}
@@ -1637,11 +1654,6 @@ function FormSection() {
                         </span>
                       )}
                     </div>
-                    {needsAllergies(selectedPkg) && allergies && (
-                      <p style={{ fontSize: 12, color: "rgba(51,51,51,0.5)", marginTop: 4 }}>
-                        {lang === "it" ? "Allergie:" : "Allergies:"} {allergies}
-                      </p>
-                    )}
                   </div>
                   {/* Companions */}
                   {companions.filter(c => c.name).map((c, i) => (
@@ -1659,11 +1671,6 @@ function FormSection() {
                           </span>
                         )}
                       </div>
-                      {needsAllergies(c.pkg) && c.allergies && (
-                        <p style={{ fontSize: 11, color: "rgba(51,51,51,0.5)", marginTop: 2 }}>
-                          {lang === "it" ? "Allergie:" : "Allergies:"} {c.allergies}
-                        </p>
-                      )}
                     </div>
                   ))}
                 </div>
@@ -1684,6 +1691,34 @@ function FormSection() {
                   <textarea value={notes} onChange={e => setNotes(e.target.value)}
                     placeholder={t.notesPlaceholder[lang]} rows={3}
                     style={{ ...inputStyle, resize: "vertical" }} />
+                </div>
+                {/* Consensi GDPR */}
+                <div style={{ textAlign: "left", marginTop: 16, marginBottom: 8, display: "flex", flexDirection: "column", gap: 10 }}>
+                  <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: COLORS.textLight, lineHeight: 1.5, cursor: "pointer" }}>
+                    <input
+                      type="checkbox"
+                      checked={consentPrivacy}
+                      onChange={(e) => { setConsentPrivacy(e.target.checked); if (e.target.checked) setErrors({ ...errors, privacy: undefined }); }}
+                      style={{ marginTop: 3, flexShrink: 0, width: 16, height: 16, accentColor: COLORS.green, cursor: "pointer" }}
+                    />
+                    <span>
+                      {t.consent.privacy[lang]}
+                      <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style={{ color: COLORS.teal, textDecoration: "underline" }}>
+                        {t.consent.privacyLink[lang]}
+                      </a>
+                      {t.consent.privacyTail[lang]} <span style={{ color: "#ff6b6b" }}>*</span>
+                    </span>
+                  </label>
+                  {errors.privacy && <span style={{ ...errStyle, marginLeft: 26 }}>{errors.privacy}</span>}
+                  <label style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: COLORS.textLight, lineHeight: 1.5, cursor: "pointer" }}>
+                    <input
+                      type="checkbox"
+                      checked={consentMarketing}
+                      onChange={(e) => setConsentMarketing(e.target.checked)}
+                      style={{ marginTop: 3, flexShrink: 0, width: 16, height: 16, accentColor: COLORS.green, cursor: "pointer" }}
+                    />
+                    <span>{t.consent.marketing[lang]}</span>
+                  </label>
                 </div>
                 <NavButtons
                   nextLabel={submitting ? "..." : t.submit[lang]}
@@ -1746,6 +1781,28 @@ function Footer() {
         maxWidth: 1000, margin: "32px auto 0", paddingTop: 24,
         borderTop: "1px solid rgba(0,0,0,0.1)", textAlign: "center",
       }}>
+        <div style={{
+          display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap",
+          marginBottom: 12,
+        }}>
+          <a href="/privacy.html" style={{ color: COLORS.teal, fontSize: 13, textDecoration: "underline" }}>
+            {t.legal.privacy[lang]}
+          </a>
+          <a href="/cookie-policy.html" style={{ color: COLORS.teal, fontSize: 13, textDecoration: "underline" }}>
+            {t.legal.cookie[lang]}
+          </a>
+          <button
+            type="button"
+            onClick={openConsentPreferences}
+            style={{
+              background: "none", border: "none", color: COLORS.teal,
+              fontSize: 13, textDecoration: "underline", cursor: "pointer",
+              padding: 0, fontFamily: "inherit",
+            }}
+          >
+            {t.legal.preferences[lang]}
+          </button>
+        </div>
         <p style={{ color: "rgba(51,51,51,0.3)", fontSize: 12 }}>
           © 2026 Electronic Picnic — ON CIRCLE Music
         </p>
@@ -1759,6 +1816,27 @@ function Footer() {
    ═══════════════════════════════════════════ */
 export default function ElectronicPicnic() {
   const [lang, setLang] = useState("it");
+
+  // Applica consenso cookie salvato (se esiste) all'avvio dell'app.
+  // Se arriviamo dalla cookie-policy con ?openConsent=1, apre il pannello preferenze.
+  useEffect(() => {
+    initConsent();
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("openConsent") === "1") {
+        openConsentPreferences();
+        // Rimuove il parametro dall'URL senza ricaricare
+        params.delete("openConsent");
+        const cleaned =
+          window.location.pathname +
+          (params.toString() ? "?" + params.toString() : "") +
+          window.location.hash;
+        window.history.replaceState({}, "", cleaned);
+      }
+    } catch (e) {
+      /* no-op */
+    }
+  }, []);
 
   return (
     <LangContext.Provider value={{ lang, setLang }}>
@@ -1776,6 +1854,7 @@ export default function ElectronicPicnic() {
         <FormSection />
         <Footer />
       </div>
+      <ConsentBanner />
     </LangContext.Provider>
   );
 }

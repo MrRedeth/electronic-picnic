@@ -1,0 +1,11 @@
+# Electronic Picnic — redirect rules per Netlify
+#
+# 1) URL puliti per le pagine legali: /privacy e /cookie-policy
+#    servono rispettivamente /privacy.html e /cookie-policy.html
+#    (200 = rewrite interno, l'utente vede l'URL pulito).
+/privacy          /privacy.html          200
+/cookie-policy    /cookie-policy.html    200
+
+# 2) SPA fallback: qualunque altro path sconosciuto torna a index.html
+#    (la landing è single-page, la gestione è lato client).
+/*                /index.html            200

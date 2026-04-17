@@ -24,9 +24,14 @@ import { createClient } from "@supabase/supabase-js";
     telefono TEXT NOT NULL,
     pacchetto TEXT NOT NULL,        -- 'free', 'picnic', 'workshop', 'picnic_workshop'
     workshop_scelto TEXT,           -- 'ceramica', 'crochet', 'wine' (null se non applicabile)
-    allergie TEXT,
+    allergie TEXT,                  -- (deprecato, non più raccolto dal form dal 2026-04 — colonna mantenuta per dati storici)
     note TEXT,
     totale_stimato INTEGER DEFAULT 0,
+    -- Consensi GDPR (prova di consenso — art. 7.1 GDPR)
+    consent_privacy_at TIMESTAMPTZ,       -- momento in cui l'utente ha accettato l'informativa privacy
+    consent_privacy_version TEXT,         -- versione dell'informativa accettata
+    consent_marketing_at TIMESTAMPTZ,     -- momento del consenso marketing (null se non dato)
+    consent_marketing_version TEXT,       -- versione dell'informativa accettata per marketing (null se non dato)
     created_at TIMESTAMPTZ DEFAULT now()
   );
 
@@ -67,6 +72,11 @@ export const supabase =
 export async function salvaPrenotazione({
   nome, email, telefono, pacchetto, workshop_scelto,
   allergie, note, totale_stimato, accompagnatori = [],
+  // Consensi GDPR — prova di consenso (art. 7.1 GDPR)
+  consent_privacy_at = null,
+  consent_privacy_version = null,
+  consent_marketing_at = null,
+  consent_marketing_version = null,
 }) {
   if (!supabase) {
     console.warn("Supabase non configurato — prenotazione salvata solo localmente.");
@@ -84,6 +94,10 @@ export async function salvaPrenotazione({
       allergie: allergie || null,
       note: note || null,
       totale_stimato,
+      consent_privacy_at,
+      consent_privacy_version,
+      consent_marketing_at,
+      consent_marketing_version,
     });
 
   if (errPren) return { success: false, error: errPren };
