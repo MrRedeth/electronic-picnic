@@ -141,7 +141,7 @@ const texts = {
       { id: "picnic", name: { it: "Picnic", en: "Picnic" }, price: "25€", desc: { it: "Area riservata 11:00–13:30, picnic box incluso", en: "Reserved area 11:00–13:30, picnic box included" }, emoji: "🧺" },
       { id: "picnic_workshop", name: { it: "Picnic + Workshop", en: "Picnic + Workshop" }, price: "35€", desc: { it: "Formula combinata — il meglio della giornata", en: "Combined package — the best of the day" }, emoji: "✨" },
       { id: "workshop", name: { it: "Workshop", en: "Workshop" }, price: "15€", desc: { it: "Una sessione a scelta tra ceramica, crochet e wine", en: "One session: ceramics, crochet, or wine" }, emoji: "🎨" },
-      { id: "free", name: { it: "Ingresso libero", en: "Free entry" }, price: { it: "Gratuito", en: "Free" }, desc: { it: "Dalle 13:30 — mercatini, musica e menu Avalon", en: "From 13:30 — markets, music, and Avalon menu" }, emoji: "🎶" },
+      { id: "free", name: { it: "Ingresso libero", en: "Free entry" }, price: { it: "Gratuito", en: "Free" }, desc: { it: "Dalle 14:30 — mercatini e musica. Registrazione possibile entro 1 ora prima dell'inizio dell'evento", en: "From 14:30 — markets and music. Registration available up to 1 hour before the start of the event" }, emoji: "🎶" },
     ],
     workshops: [
       { id: "ceramica", name: { it: "Little Beetle", en: "Little Beetle" }, by: "Little Beetle" },
