@@ -192,15 +192,12 @@
     /* ── STATS CARDS ── */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: minmax(220px, 1fr) 2.2fr;
       gap: 14px;
       margin-bottom: 28px;
     }
-    @media (max-width: 900px) {
-      .stats-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 600px) {
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 700px) {
+      .stats-grid { grid-template-columns: 1fr; }
     }
 
     .stat-card {
@@ -229,10 +226,74 @@
       border-radius: 3px 3px 0 0;
     }
     .stat-card.total::before { background: var(--dark); }
+    .stat-card.incasso::before { background: var(--green); }
     .stat-card.pkg-picnic::before { background: var(--green); }
     .stat-card.pkg-picnic_workshop::before { background: var(--teal); }
     .stat-card.pkg-workshop::before { background: var(--orange); }
     .stat-card.pkg-free::before { background: var(--yellow); }
+
+    /* ── INCASSO WIDGET ── */
+    .stat-card.incasso {
+      cursor: default;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .stat-card.incasso:hover { transform: none; box-shadow: var(--shadow); }
+    .incasso-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    .incasso-left .stat-label { margin-bottom: 6px; }
+    .incasso-value {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+    }
+    .incasso-sub {
+      font-size: 11px;
+      color: var(--gray);
+      margin-top: 4px;
+    }
+    .incasso-pct {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--gray);
+      line-height: 1;
+      padding-bottom: 4px;
+      white-space: nowrap;
+    }
+    .incasso-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .incasso-bar {
+      flex: 1;
+      height: 12px;
+      background: var(--gray-mid);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+    .incasso-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green) 0%, #4ab526 100%);
+      border-radius: 999px;
+      transition: width 0.6s ease;
+      min-width: 0;
+    }
+    .incasso-target {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dark);
+      white-space: nowrap;
+    }
 
     .stat-card:not(.total):hover { border-color: var(--gray-mid); }
     .stat-card.active { border-color: var(--green) !important; }
@@ -601,33 +662,21 @@
         <div class="stat-value" id="stat-total">—</div>
         <div class="stat-sub" id="stat-total-sub">persone totali</div>
       </div>
-      <div class="stat-card pkg-picnic" data-pkg="picnic" onclick="openModal('picnic')">
-        <div class="stat-emoji">🧺</div>
-        <div class="stat-label">Picnic</div>
-        <div class="stat-value" id="stat-picnic">—</div>
-        <div class="stat-sub" id="stat-picnic-pagati"></div>
-        <div class="stat-click-hint">Clicca per vedere la lista</div>
-      </div>
-      <div class="stat-card pkg-picnic_workshop" data-pkg="picnic_workshop" onclick="openModal('picnic_workshop')">
-        <div class="stat-emoji">✨</div>
-        <div class="stat-label">Picnic + Workshop</div>
-        <div class="stat-value" id="stat-picnic_workshop">—</div>
-        <div class="stat-sub" id="stat-picnic_workshop-pagati"></div>
-        <div class="stat-click-hint">Clicca per vedere la lista</div>
-      </div>
-      <div class="stat-card pkg-workshop" data-pkg="workshop" onclick="openModal('workshop')">
-        <div class="stat-emoji">🎨</div>
-        <div class="stat-label">Workshop</div>
-        <div class="stat-value" id="stat-workshop">—</div>
-        <div class="stat-sub" id="stat-workshop-pagati"></div>
-        <div class="stat-click-hint">Clicca per vedere la lista</div>
-      </div>
-      <div class="stat-card pkg-free" data-pkg="free" onclick="openModal('free')">
-        <div class="stat-emoji">🎶</div>
-        <div class="stat-label">Ingresso libero</div>
-        <div class="stat-value" id="stat-free">—</div>
-        <div class="stat-sub"></div>
-        <div class="stat-click-hint">Clicca per vedere la lista</div>
+      <div class="stat-card incasso">
+        <div class="incasso-header">
+          <div class="incasso-left">
+            <div class="stat-label">Incasso</div>
+            <div class="incasso-value" id="incasso-raccolto">—</div>
+            <div class="incasso-sub" id="incasso-sub">0 / 0 prenotazioni pagate</div>
+          </div>
+          <div class="incasso-pct" id="incasso-pct">0%</div>
+        </div>
+        <div class="incasso-bar-wrap">
+          <div class="incasso-bar">
+            <div class="incasso-bar-fill" id="incasso-bar-fill" style="width:0%"></div>
+          </div>
+          <div class="incasso-target" id="incasso-target">—</div>
+        </div>
       </div>
     </div>
 
@@ -759,6 +808,9 @@ function renderDashboard() {
   const countsPren = { picnic: 0, picnic_workshop: 0, workshop: 0, free: 0 };
   const pagati     = { picnic: 0, picnic_workshop: 0, workshop: 0, free: 0 };
   let totalPersone = 0;
+  let incassoTarget = 0;     // somma totale_stimato di TUTTE le prenotazioni
+  let incassoRaccolto = 0;   // somma totale_stimato delle prenotazioni pagate
+  let prenPagate = 0;        // numero prenotazioni a pagamento completate
 
   allData.forEach(r => {
     const pkg = r.pacchetto;
@@ -774,23 +826,32 @@ function renderDashboard() {
       if (counts[ppkg] !== undefined) counts[ppkg]++;
       totalPersone++;
     });
+
+    // Incasso: il totale_stimato è già la somma prenotante+accompagnatori
+    // quindi va preso una sola volta per prenotazione, non per partecipante.
+    const tot = Number(r.totale_stimato) || 0;
+    incassoTarget += tot;
+    if (r.pagamento_effettuato) {
+      incassoRaccolto += tot;
+      prenPagate++;
+    }
   });
 
   document.getElementById('stat-total').textContent = totalPersone;
   document.getElementById('stat-total-sub').textContent = `di cui ${allData.length} prenotazioni`;
   document.getElementById('chart-center-num').textContent = totalPersone;
 
-  // Update stat cards
-  Object.keys(PKG).forEach(pkg => {
-    document.getElementById(`stat-${pkg}`).textContent = counts[pkg];
-    const subEl = document.getElementById(`stat-${pkg}-pagati`);
-    if (subEl && PKG[pkg].isPaid) {
-      subEl.textContent = countsPren[pkg] > 0
-        ? `${pagati[pkg]}/${countsPren[pkg]} pagamenti`
-        : '';
-      subEl.style.color = pagati[pkg] === countsPren[pkg] && countsPren[pkg] > 0 ? '#368a1b' : '#6b7280';
-    }
-  });
+  // ── INCASSO WIDGET ──
+  const pct = incassoTarget > 0
+    ? Math.min(100, Math.round((incassoRaccolto / incassoTarget) * 100))
+    : 0;
+  const fmtEuro = n => `${Number(n).toLocaleString('it-IT')}€`;
+  document.getElementById('incasso-raccolto').textContent = fmtEuro(incassoRaccolto);
+  document.getElementById('incasso-target').textContent = fmtEuro(incassoTarget);
+  document.getElementById('incasso-pct').textContent = `${pct}%`;
+  document.getElementById('incasso-bar-fill').style.width = `${pct}%`;
+  document.getElementById('incasso-sub').textContent =
+    `${prenPagate} / ${allData.length} prenotazioni pagate`;
 
   // Donut chart
   const chartData = Object.keys(PKG).map(k => counts[k]);
